@@ -1085,7 +1085,6 @@ func initConnInfo(
 
 	sshPort := "22"
 	sshHost := ""
-	var err error
 	if config.HasCloudInit() {
 		if d.Get("ssh_forward_ip") != nil {
 			sshHost = d.Get("ssh_forward_ip").(string)
@@ -1149,14 +1148,6 @@ func initConnInfo(
 			sshHost = sshParts[0]
 			sshPort = sshParts[1]
 		}
-	} else {
-		log.Print("[DEBUG] setting up SSH forward")
-		sshPort, err = pxapi.SshForwardUsernet(vmr, client)
-		if err != nil {
-			pmParallelEnd(pconf)
-			return err
-		}
-		sshHost = d.Get("ssh_forward_ip").(string)
 	}
 
 	// Done with proxmox API, end parallel and do the SSH things
